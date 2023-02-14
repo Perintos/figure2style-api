@@ -26,6 +26,21 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/stylisticdevice', stylisticdeviceRouter);
 
+const { Sequelize } = require('sequelize');
+
+const sequelize = new Sequelize('db', 'root', 'root', {
+  host: 'localhost',
+  dialect: 'mysql',
+
+});
+
+try {
+  sequelize.authenticate();
+  console.log("Connection has been established successfully.");
+} catch (error) {
+  console.error("Unable to connect to the database:", error);
+}
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -41,6 +56,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 
 module.exports = app;
