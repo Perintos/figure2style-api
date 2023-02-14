@@ -28,7 +28,7 @@ app.use('/stylisticdevice', stylisticdeviceRouter);
 
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('db', 'root', 'root', {
+const sequelize = new Sequelize('stylistic_device_db', 'root', 'root', {
   host: 'localhost',
   dialect: 'mysql',
 
