@@ -20,5 +20,6 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.stylisticdevice = require("./stylisticdevice.model.js")(sequelize, Sequelize);
+db.stylisticdevice = require("./example.model.js")(sequelize, Sequelize);
 
 module.exports = db;
