@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const https = require("https");
+const fs = require('fs');
 
 const app = express();
 
@@ -38,8 +40,13 @@ app.get("/", (req, res) => {
 require("./app/routes/stylisticdevice.routes")(app);
 require("./app/routes/example.routes")(app);
 
-// set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+https
+  .createServer({
+      key: fs.readFileSync("key.pem"),
+      cert: fs.readFileSync("cert.pem"),
+    },
+    app
+  )
+  .listen(8080, () => {
+    console.log("serever is runing at port 8080");
+  });
