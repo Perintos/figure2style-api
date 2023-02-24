@@ -6,7 +6,7 @@ const fs = require('fs');
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:4200"
+  origin: "*"
 };
 
 app.use(cors(corsOptions));
