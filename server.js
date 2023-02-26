@@ -2,19 +2,11 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-// var corsOptions = {
-//   origin: "*"
-// };
+var corsOptions = {
+  origin: ["http://localhost:4200","*"]
+};
 
-app.UseCors(x => x
-  .AllowAnyOrigin()
-  .AllowAnyMethod()
-  .AllowAnyHeader());
-
-app.UseHttpsRedirection(); 
-
-
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

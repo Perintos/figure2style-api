@@ -39,7 +39,7 @@ router.get('/:id', async (req, res) => {
     if (err) res.send(err);
     con.query(findOne.replace('?',req.params.id), function (err, result) {
       if (err) res.send(err);
-      res.send(JSON.stringify(result));
+      res.send(JSON.stringify(result[0]));
       con.end()
     });
   })
