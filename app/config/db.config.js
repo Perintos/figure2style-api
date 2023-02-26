@@ -1,13 +1,12 @@
+// module.exports = {
+//   host: "mysql_server",
+//   user: "user",
+//   password: "password",
+//   database: "stylistic_device_db"
+// };
 module.exports = {
-  HOST: "localhost",
-  USER: "root",
-  PASSWORD: "root",
-  DB: "stylistic_device_db",
-  dialect: "mysql",
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "stylistic_device_db"
 };

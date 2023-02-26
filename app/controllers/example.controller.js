@@ -1,6 +1,3 @@
-const db = require("../models");
-const Example = db.Example;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new example
 exports.create = (req, res) => {

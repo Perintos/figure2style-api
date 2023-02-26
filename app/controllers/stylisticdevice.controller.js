@@ -1,6 +1,3 @@
-const db = require("../models");
-const Stylisticdevice = db.stylisticdevice;
-const Op = db.Sequelize.Op;
 
 // Create and Save a new stylisticdevice
 exports.create = (req, res) => {

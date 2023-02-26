@@ -1,58 +1,39 @@
 const express = require("express");
 const cors = require("cors");
-const https = require("https");
-const fs = require('fs');
 
 const app = express();
+// var corsOptions = {
+//   origin: "*"
+// };
 
-var corsOptions = {
-  origin: "*"
-};
+app.UseCors(x => x
+  .AllowAnyOrigin()
+  .AllowAnyMethod()
+  .AllowAnyHeader());
 
-app.use(cors(corsOptions));
+app.UseHttpsRedirection(); 
 
-// parse requests of content-type - application/json
+
+// app.use(cors(corsOptions));
 app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-const db = require("./app/models");
-
-db.sequelize.sync()
-  .then(() => {
-    console.log("Synced db.");
-  })
-  .catch((err) => {
-    console.log("Failed to sync db: " + err.message);
-  });
-
-// // drop the table if it already exists
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and re-sync db.");
-// });
+require("./app/models/database.js")
 
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
 
-require("./app/routes/stylisticdevice.routes")(app);
-require("./app/routes/example.routes")(app);
+const stylisticdeviceRouter = require("./app/routes/stylisticdevice.routes");
+app.use("/stylisticdevice", stylisticdeviceRouter);
 
-// https
-//   .createServer({
-//       key: fs.readFileSync("key.pem"),
-//       cert: fs.readFileSync("cert.pem"),
-//     },
-//     app
-//   )
-//   .listen(8080, () => {
-//     console.log("serever is runing at port 8080");
-//   });
+const exempleRouter = require("./app/routes/example.routes");
+app.use("/example", exempleRouter);
+
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
