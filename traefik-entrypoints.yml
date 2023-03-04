@@ -1,0 +1,39 @@
+################################################################
+# API and dashboard configuration
+################################################################
+api:
+  # Dashboard
+  #
+  #
+  dashboard: true
+  insecure: true
+################################################################
+# Docker configuration backend
+################################################################
+providers:
+  docker:
+    exposedByDefault: false
+################################################################
+# Traefik Logging
+################################################################
+log:
+  level: DEBUG
+
+################################################################
+# Entrypoint
+################################################################
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+################################################################
+# Challenge HTTP
+################################################################
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: chateau.thomass@gmail.Com
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web

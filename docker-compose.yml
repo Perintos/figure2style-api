@@ -1,18 +1,41 @@
 version: "3.8"
 
 services: 
-  app:
+  traefik:
+    # The latest official supported Traefik docker image
+    image: traefik:v2.3
+    # Enables the Traefik Dashboard and tells Traefik to listen to docker
+    # --providers tell Traefik to connect to the Docker provider
+    # enable --log.level=INFO so we can see what Traefik is doing in the log files
+    # command: --api.insecure=true --providers.docker --log.level=INFO
+    ports:
+      # Exposes port 80 for incomming web requests
+      - "80:80"
+      - "443:443"
+      # The Web UI port http://0.0.0.0:8080 (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik-entrypoints.yml:/etc/traefik/traefik.yml
+
+  figure2style-api:
+    image: figure2style-api
     build: 
       context: .
       dockerfile: Dockerfile
-    ports: 
-      - 3000:3000
     volumes: 
       - .:/app
       - '/app/node_modules'
     depends_on: 
       - mysql_server
-  
+    labels:
+       - "traefik.enable=true"
+       - "traefik.http.routers.figure2style-api.rule=Host(`figure2style-api.localhost`)"
+       - "traefik.http.routers.figure2style-api.entrypoints=web"
+       - "traefik.http.routers.figure2style-api.service=figure2style-api"
+       - "traefik.http.services.figure2style-api.loadbalancer.server.port=3000"
+
   mysql_server:
     image: mysql:8.0
     environment: 
