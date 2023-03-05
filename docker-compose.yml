@@ -18,7 +18,8 @@ services:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik-entrypoints.yml:/etc/traefik/traefik.yml
-
+      - ./:/usr/src/app
+      
   figure2style-api:
     image: figure2style-api
     build: 
@@ -31,10 +32,11 @@ services:
       - mysql_server
     labels:
        - "traefik.enable=true"
-       - "traefik.http.routers.figure2style-api.rule=Host(`figure2style-api.localhost`)"
-       - "traefik.http.routers.figure2style-api.entrypoints=web"
+       - "traefik.http.routers.figure2style-api.rule=Host(`51.254.119.169`,`perintos.fr`, `hello.perintos.fr` )"
        - "traefik.http.routers.figure2style-api.service=figure2style-api"
        - "traefik.http.services.figure2style-api.loadbalancer.server.port=3000"
+       - "traefik.http.routers.figure2style-api.entrypoints=websecure"
+       - "traefik.http.routers.figure2style-api.tls.certresolver=myresolver"
 
   mysql_server:
     image: mysql:8.0
