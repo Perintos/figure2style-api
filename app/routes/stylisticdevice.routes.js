@@ -7,14 +7,19 @@ const findAll ='SELECT * FROM stylisticdevice'
 const randomThree ='SELECT * FROM stylisticdevice as fs WHERE fs.id!= ? ORDER BY rand() LIMIT 3;'
 const findOne = 'Select * FROM stylisticdevice as s, example as e where s.id=e.id_stylistic_device && s.id= ?';
 
-function insertOneRecord(query)  {
+function insertOneRecord(stylisticdevice, example)  {
   let con = mysql.createConnection(dbConfig)
   con.connect(function(err) {
     if (err) res.send(err);
-    con.query(query, function (err, result) {
+    con.query(stylisticdevice, function (err, result) {
       if (err) res.send(err);
-      console.log("executed -> "+ query)
-      con.end()
+      console.log("executed -> "+ stylisticdevice)
+
+      con.query(example, [result.insertId], function (err, result) {
+        if (err) res.send(err);
+        console.log("executed -> "+ example)
+        con.end()
+      });
     });
   })
 }
@@ -36,17 +41,13 @@ router.get('/', async (req, res) => {
 router.get('/initialize', async (req, res) => {
   const nReadlines = require('n-readlines');
   var path = require('path');
-  const broadbandLines1 = new nReadlines(path.join(__dirname)+'/../utils/insert-stylistic-device.sql'); 
-  const broadbandLines2 = new nReadlines(path.join(__dirname)+'/../utils/insert-example.sql'); 
-  const tabBroadbandLines = [broadbandLines1,broadbandLines2]
-  let queries = []
+  const broadbandStylisticDevice = new nReadlines(path.join(__dirname)+'/../utils/insert-stylistic-device.sql'); 
+  const broadbandExample = new nReadlines(path.join(__dirname)+'/../utils/insert-example.sql'); 
   let executeQueries = await function() {
-    tabBroadbandLines.forEach(file => {
-      while (line = file.next()) {
-        queries.push(line.toString('utf-8'))
-        insertOneRecord(line.toString('utf-8'));
+      while (stylisticDevice = broadbandStylisticDevice.next() ) {
+        example =  broadbandExample.next()
+        insertOneRecord(stylisticDevice.toString('utf-8'), example.toString('utf-8'));
       }
-    })
   };
   executeQueries()
   res.send("ok");
