@@ -19,7 +19,21 @@ function insertOneRecord(query)  {
   })
 }
 
-router.post("/", async (req, res) => {
+router.post("/", stylisticDeviceController.create);
+
+router.get('/', async (req, res) => {
+  con = mysql.createConnection(dbConfig)
+  con.connect(function(err) {
+    if (err) res.send(err);
+    con.query(findAll, function (err, result) {
+      if (err) res.send(err);
+      res.send(JSON.stringify(result));
+      con.end()
+    });
+  })
+})
+
+router.get('/initialize', async (req, res) => {
   const nReadlines = require('n-readlines');
   var path = require('path');
   const broadbandLines1 = new nReadlines(path.join(__dirname)+'/../utils/insert-stylistic-device.sql'); 
@@ -36,22 +50,6 @@ router.post("/", async (req, res) => {
   };
   executeQueries()
   res.send("ok");
-});
-
-router.get('/', async (req, res) => {
-  con = mysql.createConnection(dbConfig)
-  con.connect(function(err) {
-    if (err) res.send(err);
-    con.query(findAll, function (err, result) {
-      if (err) res.send(err);
-      res.send(JSON.stringify(result));
-      con.end()
-    });
-  })
-})
-
-router.get('/initialize/initialize', async (req, res) => {
-
 });
 
 router.get('/random/:id', async (req, res) => {
