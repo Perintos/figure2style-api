@@ -7,6 +7,18 @@ const findAll ='SELECT * FROM stylisticdevice'
 const randomThree ='SELECT * FROM stylisticdevice as fs WHERE fs.id!= ? ORDER BY rand() LIMIT 3;'
 const findOne = 'Select * FROM stylisticdevice as s, example as e where s.id=e.id_stylistic_device && s.id= ?';
 
+function insertOneRecord(query)  {
+  let con = mysql.createConnection(dbConfig)
+  con.connect(function(err) {
+    if (err) res.send(err);
+    con.query(query, function (err, result) {
+      if (err) res.send(err);
+      console.log("executed -> "+ query)
+      con.end()
+    });
+  })
+}
+
 router.post("/", stylisticDeviceController.create);
 
 router.get('/', async (req, res) => {
@@ -20,6 +32,25 @@ router.get('/', async (req, res) => {
     });
   })
 })
+
+router.get('/initialize', async (req, res) => {
+  const nReadlines = require('n-readlines');
+  var path = require('path');
+  const broadbandLines1 = new nReadlines(path.join(__dirname)+'/../utils/insert-stylistic-device.sql'); 
+  const broadbandLines2 = new nReadlines(path.join(__dirname)+'/../utils/insert-example.sql'); 
+  const tabBroadbandLines = [broadbandLines1,broadbandLines2]
+  let queries = []
+  let executeQueries = await function() {
+    tabBroadbandLines.forEach(file => {
+      while (line = file.next()) {
+        queries.push(line.toString('utf-8'))
+        insertOneRecord(line.toString('utf-8'));
+      }
+    })
+  };
+  executeQueries()
+  res.send("ok");
+});
 
 router.get('/random/:id', async (req, res) => {
   con = mysql.createConnection(dbConfig)
