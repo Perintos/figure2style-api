@@ -2,6 +2,7 @@ const stylisticDeviceController = require("../controllers/stylisticdevice.contro
 var router = require("express").Router();
 const mysql = require('mysql2');
 const dbConfig = require("../config/db.config.js");
+const logger = require('pino')()
 
 const findAll ='SELECT * FROM stylisticdevice'
 const randomThree ='SELECT * FROM stylisticdevice as fs WHERE fs.id!= ? ORDER BY rand() LIMIT 3;'
@@ -59,7 +60,14 @@ router.get('/random/:id', async (req, res) => {
     if (err) res.send(err);
     con.query(randomThree.replace('?',req.params.id), function (err, result) {
       if (err) res.send(err);
+
+      logger.info(`router.get('/random/${req.params.id}`)
+      result.forEach(element => {
+        logger.info("stylistic_device =>  " + element.name)
+      });
+
       res.send(JSON.stringify(result));
+    
       con.end()
     });
   })
