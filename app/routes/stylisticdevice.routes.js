@@ -6,7 +6,7 @@ const logger = require('pino')()
 
 const findAll ='SELECT * FROM stylisticdevice'
 const randomThree ='SELECT * FROM stylisticdevice as fs WHERE fs.id!= ? ORDER BY rand() LIMIT 3;'
-const findOne = 'Select * FROM stylisticdevice as s, example as e where s.id=e.id_stylistic_device && s.id= ?';
+const findOne = 'Select s.id as id , s.name as name, s.description as description, e.text as text, e.id as id_example, e.author as author FROM stylisticdevice as s, example as e where s.id=e.id_stylistic_device && s.id= ?';
 
 function insertOneRecord(stylisticdevice, example)  {
   let con = mysql.createConnection(dbConfig)
